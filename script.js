@@ -201,8 +201,8 @@ document.getElementById("downloadExcel").addEventListener("click", function () {
 
         rows.push(row);
     }
-
-    const csvContent = [headers, ...rows].join("\n");
+    const bom = '\uFEFF';
+    const csvContent = [bom + headers, ...rows].join("\n");
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
