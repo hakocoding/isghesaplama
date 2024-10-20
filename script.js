@@ -1,9 +1,10 @@
+// Next Step Event Listener
 document.getElementById("nextStep").addEventListener("click", function () {
     const selectedFactors = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
     displayCurrentStates(selectedFactors);
 });
 
-
+// Display Current States Function
 function displayCurrentStates(factors) {
     const currentStatesDiv = document.getElementById("currentStates");
     currentStatesDiv.innerHTML = '';
@@ -23,15 +24,15 @@ function displayCurrentStates(factors) {
     document.getElementById("riskCalculation").style.display = "block";
 }
 
+// Back to Factors Event Listener
 document.getElementById("backToFactors").addEventListener("click", function () {
-    // Faktor seçim bölümünü göster
+    // Show factor selection section
     document.getElementById("factorSelection").style.display = "block";
-    // Risk hesaplama bölümünü gizle
+    // Hide risk calculation section
     document.getElementById("riskCalculation").style.display = "none";
 });
 
-
-
+// Generate Options Function
 function generateOptions(factor) {
     const options = {
         "Yangın tüpü": `
@@ -53,6 +54,7 @@ function generateOptions(factor) {
     return options[factor];
 }
 
+// Calculate Risk Event Listener
 document.getElementById("calculateRisk").addEventListener("click", function () {
     const results = {};
     const selectedFactors = ['Yangın tüpü', 'Kişisel Koruyucu Donanım', 'İş Sağlığı ve Güvenliği Eğitimi'];
@@ -68,6 +70,7 @@ document.getElementById("calculateRisk").addEventListener("click", function () {
     displayResults(results);
 });
 
+// Calculate Risk Details Function
 function calculateRiskDetails(durum, factor) {
     let olasılık, şiddet, öneri, risk;
 
@@ -147,6 +150,7 @@ function calculateRiskDetails(durum, factor) {
     };
 }
 
+// Display Results Function
 function displayResults(results) {
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = '';
@@ -164,6 +168,7 @@ function displayResults(results) {
     document.getElementById("downloadExcel").style.display = "block";
 }
 
+// Download Excel Event Listener
 document.getElementById("downloadExcel").addEventListener("click", function () {
     const results = {};
     const selectedFactors = ['Yangın tüpü', 'Kişisel Koruyucu Donanım', 'İş Sağlığı ve Güvenliği Eğitimi'];
@@ -175,10 +180,9 @@ document.getElementById("downloadExcel").addEventListener("click", function () {
             results[factor] = calculateRiskDetails(durum, factor);
         }
     });
-    
 
     // Başlıkları tanımlayın
-    const headers = "Tehlike Kaynağı, Mevcut Durum, Risk, Olasılık, Şiddet, Risk Skoru, Risk Sınıfı, Önlem";
+    const headers = ["Tehlike Kaynağı", "Mevcut Durum", "Risk", "Olasılık", "Şiddet", "Risk Skoru", "Risk Sınıfı", "Öneri"];
     const rows = [];
 
     for (const factor in results) {
@@ -197,27 +201,23 @@ document.getElementById("downloadExcel").addEventListener("click", function () {
             riskSkoru,
             riskSınıfı,
             öneri
-        ].map(value => `"${value}"`).join(","); // Her bir değeri çift tırnak içine alarak virgül ile ayırın
+        ];
 
         rows.push(row);
     }
-    const bom = '\uFEFF';
-    const csvContent = [bom + headers, ...rows].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", "risk_hesaplama_sonuclari.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Excel dosyası oluşturma
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Risk Hesaplama Sonuçları");
+
+    // Dosyayı indirme
+    XLSX.writeFile(workbook, "risk_hesaplama_sonuclari.xlsx");
 });
 
 // Risk sınıfını belirleyen fonksiyon
 function getRiskClass(riskSkoru) {
     if (riskSkoru >= 1 && riskSkoru <= 4) return "Düşük";
-    if (riskSkoru >= 5 && riskSkoru <= 9) return "Orta";
-    if (riskSkoru >= 10 && riskSkoru <= 15) return "Yüksek";
-    if (riskSkoru > 15) return "Çok Yüksek";
-    return "Bilinmiyor"; // Varsayılan değer
+    if (riskSkoru >= 5 && riskSkoru <= 8) return "Orta";
+    return "Yüksek"; // riskSkoru 9 ve üzeri
 }
