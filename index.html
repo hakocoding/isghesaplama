@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Hesaplama Aracı</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Risk Hesaplama Aracı</h1>
+        <div id="factorSelection">
+            <h2>Hesaplanacak Faktörler</h2>
+            <div id="factors">
+                <h3>Yangın</h3> 
+                <div class="factor">
+                    
+                    <input type="checkbox" id="factor-yangin" value="Yangın tüpü">
+                    <label for="factor-yangin">Yangın Tüpü</label>
+                </div>
+                <div class="factor">
+                    
+                    <input type="checkbox" id="factor-yangin" value="Yangın" >
+                    <label for="factor-yangin">Sabit püskürtme cihazları</label>
+                </div>
+                <h3>Çalışanlar</h3> 
+                <div class="factor">
+                    <input type="checkbox" id="factor-kkd" value="Kişisel Koruyucu Donanım" >
+                    <label for="factor-kkd">Kişisel Koruyucu Donanım</label>
+                </div>
+                <h3>Eğitim</h3> 
+                <div class="factor">
+                    <input type="checkbox" id="factor-isg" value="İş Sağlığı ve Güvenliği Eğitimi" >
+                    <label for="factor-isg">İş Sağlığı ve Güvenliği Eğitimi</label>
+                </div>
+            </div>
+            <button id="nextStep">Sonraki Adıma Geç</button>
+        </div>
+
+        <div id="riskCalculation" style="display: none;">
+            <h2>Tehlike Durumlarını Seçin</h2>
+            <div id="currentStates"></div>
+            <button id="calculateRisk">Riski Hesapla</button>
+            <div id="result"></div>
+            <button id="downloadExcel" style="display:none;">Excel Olarak İndir</button>
+            <button id="backToFactors">Faktörlere Dön</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
